@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+   test:
+      image: clusterexpert/openvpn
+      privileged: true
+      command: passwordless -u udp://$TENANT_DOMAIN -s 10.128.0.0/9 -c -d -D -k '5 30'
+      ports:
+      - "1194:1194/udp"
+      volumes:
+      - /etc/openvpn
