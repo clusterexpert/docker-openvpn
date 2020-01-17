@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#
+# Run the OpenVPN server normally
+#
+
+if [ "$DEBUG" == "1" ]; then
+  set -x
+fi
+
+set -e
+
+cd $OPENVPN
+
+# Headless passwordless build
+if [ ! -e pki/issued/$1.crt ]; then
+    easyrsa build-client-full $1 nopass
+fi
+
+exec ovpn_getclient $1
