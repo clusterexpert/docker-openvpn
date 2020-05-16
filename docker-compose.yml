@@ -11,7 +11,7 @@ services:
       privileged: true
       network_mode: "host"
       image: clusterexpert/openvpn
-      command: passwordless -u udp://cluster.expert -s 10.32.0.0/16 -c -d -D
+      command: passwordless -u udp://cluster.expert -s $VPN_NETWORK -c -d -D
       ports:
       - "1194:1194/udp"
       volumes:
