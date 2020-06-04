@@ -31,7 +31,7 @@ Set DMZ for this host in GCP firewall.
 
 ```
 echo 200 vpn >> /etc/iproute2/rt_tables
-ip rule add from 10.128.0.10 table vpn
+ip rule add from 10.128.0.2 table vpn
 ip route add default via 10.128.0.1 table vpn
 ```
 
