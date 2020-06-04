@@ -1,0 +1,18 @@
+# VPN network is required more for NAT piercing, docker could encrypt traffic.
+# Must be run first and docker swarm must be then populated inside VPN.
+# Microservices join same network, docker handles DNS and routing.
+#
+# Clients run native OS openvpn with config got with `dexec getclient NAME`
+version: '3.7'
+volumes:
+   vpn:
+services:
+   openvpn:
+      privileged: true
+      network_mode: "host"
+      image: clusterexpert/openvpn
+      command: passwordless -u udp://cluster.expert -s $VPN_NETWORK -c -d -D
+      ports:
+      - "1194:1194/udp"
+      volumes:
+      - vpn:/etc/openvpn
