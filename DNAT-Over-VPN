@@ -31,8 +31,8 @@ Set DMZ for this host in GCP firewall.
 
 ```
 echo 200 vpn >> /etc/iproute2/rt_tables
-ip rule add from 10.64.0.10 table vpn
-ip route add default via 10.64.0.1 table vpn
+ip rule add from 10.128.0.10 table vpn
+ip route add default via 10.128.0.1 table vpn
 ```
 
 If the service runs inside docker, then for each service route must be added.
