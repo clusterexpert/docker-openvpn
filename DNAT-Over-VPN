@@ -1,0 +1,41 @@
+It effectively pierces NAT or ISP filtering and make a mirror on any public hosting.
+All ports except 23 (gateway SSH) are forwarded over VPN to the exposed host.
+
+1. Setup the gateway
+--------------------
+
+In this guide Compute Engine is used. Instance configuration is attached.
+Locate a Debian Buster instance located between exposed host and expected clients.
+Set DMZ for this host in GCP firewall.
+
+1. Configure gateway
+
+  apt-get install openvpn easy-rsa bash-completion
+  cd /etc/openvpn && make-cadir rsa && cd rsa
+  ./easyrsa
+  
+  # Follow instructions.
+
+  # Gateway itself is avail on 23 port
+  
+  sed -i 's/#Port 22/Port 23/' /etc/ssh/sshd_config
+  
+2. Configure and connect client that must have a fixed IP.
+
+3. Configure NAT
+
+    iptables -t nat -R PREROUTING 1 \! -s 10.64.0.0/24 -p tcp -m multiport --dports 80:50000 -j DNAT --to-destination 10.64.0.10
+    iptables -t nat -A POSTROUTING -s 10.64.0.0/24 -j MASQUERADE
+  
+4. [Configure routing on client](https://unix.stackexchange.com/questions/4420/reply-on-same-interface-as-incoming). Because outgoing packets from client are not routed through VPN be default we have to instruct OS to send packets back where it arrived from.
+
+```
+echo 200 vpn >> /etc/iproute2/rt_tables
+ip rule add from 10.64.0.10 table vpn
+ip route add default via 10.64.0.1 table vpn
+```
+
+If the service runs inside docker, then for each service route must be added.
+
+  ip rule add from 172.18.0.3 table vpn
+  
