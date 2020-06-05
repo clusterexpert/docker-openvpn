@@ -39,3 +39,4 @@ If the service runs inside docker, then for each service route must be added.
 
   ip rule add from 172.18.0.3 table vpn
   
+where IP is *destination* in container's `iptable` DOCKER entry.
